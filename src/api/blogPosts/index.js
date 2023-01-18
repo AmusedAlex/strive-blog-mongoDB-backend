@@ -152,6 +152,30 @@ blogPostsRouter.get(
   "/:blogPostId/comments/:commentId",
   async (req, res, next) => {
     try {
+      const blogPost = await BlogPostsModel.findById(req.params.blogPostId);
+      if (blogPost) {
+        const comment = blogPost.comments.find(
+          (comment) => comment._id.toString() === req.params.commentId
+        );
+
+        if (comment) {
+          res.send(comment);
+        } else {
+          next(
+            createHttpError(
+              404,
+              `Comment with id ${req.params.commentId} not found!`
+            )
+          );
+        }
+      } else {
+        next(
+          createHttpError(
+            404,
+            `BlogPost with id ${req.params.blogPostId} not found!`
+          )
+        );
+      }
     } catch (error) {
       next(error);
     }
@@ -161,6 +185,36 @@ blogPostsRouter.put(
   "/:blogPostId/comments/:commentId",
   async (req, res, next) => {
     try {
+      const blogPost = await BlogPostsModel.findById(req.params.blogPostId);
+      if (blogPost) {
+        const index = blogPost.comments.findIndex(
+          (comment) => comment._id.toString() === req.params.commentId
+        );
+
+        if (index !== -1) {
+          blogPost.comments[index] = {
+            ...blogPost.comments[index].toObject(),
+            ...req.body,
+            updatedAt: new Date(),
+          };
+          await blogPost.save();
+          res.send(blogPost);
+        } else {
+          next(
+            createHttpError(
+              404,
+              `Comment with id ${req.params.commentId} not found!`
+            )
+          );
+        }
+      } else {
+        next(
+          createHttpError(
+            404,
+            `BlogPost with id ${req.params.blogPostId} not found!`
+          )
+        );
+      }
     } catch (error) {
       next(error);
     }
@@ -170,6 +224,21 @@ blogPostsRouter.delete(
   "/:blogPostId/comments/:commentId",
   async (req, res, next) => {
     try {
+      const updatedBlogPost = await BlogPostsModel.findByIdAndUpdate(
+        req.params.blogPostId, // WHO
+        { $pull: { comments: { _id: req.params.commentId } } }, // HOW
+        { new: true }
+      );
+      if (updatedBlogPost) {
+        res.send(updatedBlogPost);
+      } else {
+        next(
+          createHttpError(
+            404,
+            `BlogPost with id ${req.params.blogPostId} not found!`
+          )
+        );
+      }
     } catch (error) {
       next(error);
     }
