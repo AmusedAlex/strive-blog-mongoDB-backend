@@ -6,7 +6,7 @@ const authorsRouter = express.Router();
 
 authorsRouter.post("/", async (req, res, next) => {
   try {
-    req.body.author.avatar = `https://ui-avatars.com/api/?name=${req.body.firstName} ${req.body.lastName}`;
+    req.body.avatar = `https://ui-avatars.com/api/?name=${req.body.firstName} ${req.body.lastName}`;
 
     const author = {
       ...req.body,

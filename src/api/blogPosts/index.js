@@ -6,7 +6,7 @@ const blogPostsRouter = express.Router();
 
 blogPostsRouter.post("/", async (req, res, next) => {
   try {
-    const newBlogPost = new BlogPostsModel(blogPost);
+    const newBlogPost = new BlogPostsModel(req.body);
     // here it happens validation (thanks to Mongoose) of req.body, if it is not ok Mongoose will throw an error
     // if it is ok the blogPost is not saved yet
     const { _id } = await newBlogPost.save();
