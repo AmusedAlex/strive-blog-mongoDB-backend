@@ -6,12 +6,6 @@ const blogPostsRouter = express.Router();
 
 blogPostsRouter.post("/", async (req, res, next) => {
   try {
-    req.body.author.avatar = `https://ui-avatars.com/api/?name=${req.body.author.name}`;
-
-    const blogPost = {
-      ...req.body,
-    };
-
     const newBlogPost = new BlogPostsModel(blogPost);
     // here it happens validation (thanks to Mongoose) of req.body, if it is not ok Mongoose will throw an error
     // if it is ok the blogPost is not saved yet
