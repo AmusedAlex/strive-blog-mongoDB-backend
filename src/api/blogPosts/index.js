@@ -27,7 +27,10 @@ blogPostsRouter.get("/", async (req, res, next) => {
 
 blogPostsRouter.get("/:blogPostId", async (req, res, next) => {
   try {
-    const blogPost = await BlogPostsModel.findById(req.params.blogPostId);
+    const blogPost = await BlogPostsModel.findById(
+      req.params.blogPostId
+    ).populate("authors"); // .populate({path:"authors"}) 2nd version
+
     if (blogPost) {
       res.send(blogPost);
     } else {
