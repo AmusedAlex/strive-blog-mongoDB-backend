@@ -31,7 +31,6 @@ export const basicAuthMiddleware = async (req, res, next) => {
       // 5a. If credentials are ok --> you can go
       req.user = user; // adding the current user to the request object is going to unlock a number of possiblities
       //   like using some subsequent middlewares to check the role of that user for instance(authorization)
-      console.log(req.user._id);
 
       next();
     } else {

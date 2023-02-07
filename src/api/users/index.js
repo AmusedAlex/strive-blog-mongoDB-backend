@@ -6,6 +6,23 @@ import UsersModel from "./model.js";
 
 const usersRouter = express.Router();
 
+usersRouter.put("/me", basicAuthMiddleware, async (req, res, next) => {
+  try {
+    const updatedUser = await UsersModel.findByIdAndUpdate(
+      req.user._id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    res.send(updatedUser);
+  } catch (error) {
+    next(error);
+  }
+});
+
 usersRouter.post("/", async (req, res, next) => {
   try {
     req.body.avatar = `https://ui-avatars.com/api/?name=${req.body.firstName} ${req.body.lastName}`;
@@ -91,23 +108,6 @@ usersRouter.put(
     }
   }
 );
-
-usersRouter.put("/me", basicAuthMiddleware, async (req, res, next) => {
-  try {
-    const updatedUser = await UsersModel.findByIdAndUpdate(
-      req.user._id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
-
-    res.send(updatedUser);
-  } catch (error) {
-    next(error);
-  }
-});
 
 usersRouter.delete(
   "/:userId",
