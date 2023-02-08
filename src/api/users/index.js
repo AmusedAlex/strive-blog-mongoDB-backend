@@ -24,7 +24,7 @@ usersRouter.put("/me", JWTAuthMiddleware, async (req, res, next) => {
   }
 });
 
-usersRouter.post("/", async (req, res, next) => {
+usersRouter.post("/register", async (req, res, next) => {
   try {
     req.body.avatar = `https://ui-avatars.com/api/?name=${req.body.firstName} ${req.body.lastName}`;
 
@@ -65,7 +65,7 @@ usersRouter.get("/me", JWTAuthMiddleware, async (req, res, next) => {
 
 usersRouter.get(
   "/:userId",
-  basicAuthMiddleware,
+  JWTAuthMiddleware,
   adminOnlyMiddleware,
   async (req, res, next) => {
     try {
